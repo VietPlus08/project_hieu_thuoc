@@ -42,11 +42,11 @@ public class OrderController {
     @GetMapping("/new")
     public String showCreateForm(Model model) {
         Customer customer = new Customer();
-        OrderDto orderDto = new OrderDto();
-        if (model.containsAttribute("customer")){
-            customer = (Customer) model.asMap().get("customer");
-            orderDto.setCustomerId(customer.getId());
-        }
+        OrderDto orderDto = orderService.createForm();
+//        if (model.containsAttribute("customer")){
+//            customer = (Customer) model.asMap().get("customer");
+//            orderDto.setCustomerId(customer.getId());
+//        }
 
         model.addAttribute("customer", customer);
         model.addAttribute("products", productService.getList());

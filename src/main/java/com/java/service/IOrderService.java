@@ -16,4 +16,6 @@ public interface IOrderService {
     Page<OrderList> listPaging(Pageable pageable);
 
     void createOrder(OrderDto order);
+
+    OrderDto createForm();
 }

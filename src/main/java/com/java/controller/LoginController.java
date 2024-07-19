@@ -32,4 +32,9 @@ public class LoginController {
             return "login/login-form";
         }
     }
+
+    @GetMapping("/register")
+    public String showRegisterForm() {
+        return "login/register-form"; // Đây là tên của file JSP hoặc Thymeleaf template (ví dụ: login-form.jsp)
+    }
 }

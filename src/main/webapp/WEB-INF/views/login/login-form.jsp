@@ -67,6 +67,18 @@
         .form-submit:hover {
             background-color: #0056b3;
         }
+
+        .form-link {
+            display: block;
+            /*text-align: center;*/
+            margin-top: 10px;
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        .form-link:hover {
+            text-decoration: underline;
+        }
     </style>
 
     <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css">
@@ -75,7 +87,7 @@
 </head>
 <body>
 <div id="wrapper">
-    <form action="" id="form-login">
+    <form action="/login/authenticate" id="form-login">
         <h1 class="form-heading" style="margin-bottom: 0">Đăng nhập</h1>
         <h2 class="form-heading" style="margin-top: 10px">Quản lý hiệu thuốc</h2>
         <div class="form-group">
@@ -91,6 +103,7 @@
         </div>
         <input type="submit" value="Đăng nhập" class="form-submit">
     </form>
+    <a href="/login/register" class="form-link">Đăng ký tài khoản</a> <!-- Liên kết đến trang đăng ký -->
 </div>
 
 <script src="https://code.jquery.com/jquery-3.6.0.js"></script>

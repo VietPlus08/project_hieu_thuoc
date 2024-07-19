@@ -82,4 +82,19 @@ public class OrderService implements IOrderService {
         }
         orderItemRepo.saveAll(allOrderItems);
     }
+
+    @Override
+    public OrderDto createForm() {
+        OrderDto orderDto = new OrderDto();
+
+        // Tạo mã hóa đơn
+        OrderList lastOrder = orderRepo.findTopByOrderByIdDesc();
+        String orderCode = String.format("HDL%05d", lastOrder.getId());
+        orderDto.setOrderCode(orderCode);
+
+        orderDto.setCustomerName("Khách lẻ");
+        orderDto.setEmployeeName("Nguyễn Hoàng Nhật");
+        orderDto.setOrderDate(Date.valueOf(LocalDate.now()));
+        return orderDto;
+    }
 }
