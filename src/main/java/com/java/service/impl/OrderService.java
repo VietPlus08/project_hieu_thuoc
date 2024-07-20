@@ -112,14 +112,20 @@ public class OrderService implements IOrderService {
         OrderDto orderDto = new OrderDto();
 
         // Tạo mã hóa đơn
-        OrderList lastOrder = orderRepo.findTopByOrderByIdDesc();
-        String orderCode = String.format("HDL%05d", lastOrder.getId());
-        orderDto.setOrderCode(orderCode);
+        orderDto.setOrderCode(getLastOrder());
 
         orderDto.setCustomerName("Khách lẻ");
         orderDto.setEmployeeName("Nguyễn Hoàng Nhật");
         orderDto.setOrderDate(Date.valueOf(LocalDate.now()));
         return orderDto;
+    }
+
+    private String getLastOrder(){
+        OrderList lastOrder = orderRepo.findTopByOrderByIdDesc();
+        if (lastOrder == null) {
+            return String.format("HDL%05d", 1);
+        }
+        return String.format("HDL%05d", lastOrder.getId());
     }
 
     private Customer getCustomer(String customer){
