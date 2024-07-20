@@ -21,4 +21,16 @@ public class Employee {
     private String account;
     private String password;
     private String role;
+
+    public Employee(Integer id) {
+        this.id = id;
+    }
+
+    public Employee(Integer id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+
+    public Employee() {
+    }
 }

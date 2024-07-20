@@ -70,7 +70,7 @@
         <h2 class="form-heading" style="margin-top: 10px">Quản lý hiệu thuốc</h2>
         <div class="form-group">
             <i class="far fa-user"></i>
-            <input type="text" class="form-input" placeholder="Tên đăng nhập">
+            <input type="text" class="form-input" placeholder="Họ tên">
         </div>
         <div class="form-group">
             <i class="far fa-envelope"></i>
@@ -81,6 +81,10 @@
             <input type="number" class="form-input" placeholder="Số điện thoại">
         </div>
         <div class="form-group">
+            <i class="far fa-user"></i>
+            <input type="text" class="form-input" placeholder="Tên đăng nhập">
+        </div>
+        <div class="form-group">
             <i class="far fa-key"></i>
             <input type="password" class="form-input" placeholder="Mật khẩu">
         </div>
@@ -89,7 +93,7 @@
             <input type="password" class="form-input" placeholder="Xác nhận mật khẩu">
         </div>
         <input type="submit" value="Đăng ký" class="form-submit">
-        <a href="/login" class="form-link">Đã có tài khoản? Đăng nhập</a> <!-- Liên kết đến trang đăng nhập -->
+        <a href="/login" class="form-link">Đã có tài khoản? Đăng nhập</a>
     </form>
 </div>
 </body>

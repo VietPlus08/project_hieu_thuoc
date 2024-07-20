@@ -1,5 +1,6 @@
 package com.java.controller;
 
+import com.java.dto.FilterModel;
 import com.java.dto.OrderDto;
 import com.java.dto.OrderItemDto;
 import com.java.model.Customer;
@@ -36,6 +37,7 @@ public class OrderController {
     public String list(Model model) {
         List<OrderList> orderLists = orderService.getList();
         model.addAttribute("orderLists", orderLists);
+        model.addAttribute("filterModel", new FilterModel());
         return "order/order-list";
     }
 
@@ -58,12 +60,14 @@ public class OrderController {
 
     @PostMapping("/save")
     public String save(@ModelAttribute("orderDto") OrderDto order) {
-//        orderService.create(order);
         for (OrderItemDto item : order.getOrderItems()) {
             System.out.println("Product ID: " + item.getProductId() + ", Quantity: " + item.getQuantity());
         }
-        orderService.createOrder(order);
-        return "redirect:/order";
+        boolean result = orderService.createOrder(order);
+        if (result) {
+            return "redirect:/order";
+        }
+        return "redirect:/order/new";
     }
 
 //    @GetMapping("/edit/{id}")

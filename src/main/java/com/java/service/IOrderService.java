@@ -15,7 +15,7 @@ public interface IOrderService {
     OrderList getById(Integer id);
     Page<OrderList> listPaging(Pageable pageable);
 
-    void createOrder(OrderDto order);
+    boolean createOrder(OrderDto order);
 
     OrderDto createForm();
 }

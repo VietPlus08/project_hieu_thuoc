@@ -25,6 +25,11 @@ public class Customer {
         this.id = id;
     }
 
+    public Customer(Integer id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+
     public Customer() {
     }
 }

@@ -5,6 +5,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.sql.Date;
+import java.time.LocalTime;
 import java.util.List;
 
 @Entity
@@ -26,6 +27,8 @@ public class OrderList {
     private int total;
 
     private Date orderDate;
+
+    private LocalTime orderTime;
 
     public OrderList(Integer id) {
         this.id = id;
