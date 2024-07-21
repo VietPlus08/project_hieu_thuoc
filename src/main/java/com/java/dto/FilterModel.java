@@ -4,11 +4,14 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.sql.Date;
+import java.time.LocalTime;
 
 @Getter @Setter
 public class FilterModel {
     Date startDate;
     Date endDate;
-    String orderType;
-    int orderCode;
+    LocalTime startTime;
+    LocalTime endTime;
+    String orderType1;
+    String orderType2;
 }

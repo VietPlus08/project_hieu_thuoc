@@ -8,6 +8,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 @Service
@@ -48,5 +50,22 @@ public class ProductService implements IProductService {
     @Override
     public Page<Product> listPaging(Pageable pageable) {
         return null;
+    }
+
+    @Override
+    public HashMap<Integer, Product> getKeyValueInventoryProduct(List<Integer> productIds) {
+        HashMap<Integer, Product> hashMap = new HashMap<>();
+        List<Product> products = productRepo.findAllById(productIds);
+        for (Product product : products) {
+            hashMap.put(product.getId(), product);
+        }
+        return hashMap;
+    }
+
+    @Override
+    public boolean saveHashMapProduct(HashMap<Integer, Product> inventoryProductHashMap) {
+        List<Product> products = new ArrayList<>(inventoryProductHashMap.values());
+        productRepo.saveAll(products);
+        return true;
     }
 }

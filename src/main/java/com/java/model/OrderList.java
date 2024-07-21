@@ -24,7 +24,7 @@ public class OrderList {
     @OneToMany(mappedBy = "orderList", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<OrderItem> orderItems;
 
-    private int total;
+    private double total;
 
     private Date orderDate;
 

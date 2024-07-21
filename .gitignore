@@ -10,12 +10,12 @@ web.xml
 #build/
 
 # Ignore temporary files
-*.log
-*.tmp
+# *.log
+# *.tmp
 
 # Ignore jar files
-*.jar
-*.war
+# *.jar
+# *.war
 
 ## Ignore IntelliJ IDEA project files
 #.idea/
