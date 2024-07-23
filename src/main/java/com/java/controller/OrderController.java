@@ -18,6 +18,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/order")
@@ -34,6 +35,11 @@ public class OrderController {
 
     @Autowired
     private ProductService productService;
+
+    @GetMapping("/main")
+    public String main() {
+        return "order/order-main";
+    }
 
     @GetMapping
     public String list(Model model) {
@@ -59,22 +65,26 @@ public class OrderController {
 
     @PostMapping("/save")
     public String save(@ModelAttribute("orderDto") OrderDto order, RedirectAttributes redirectAttributes) {
-        boolean result = orderService.createOrder(order);
-        if (result) {
+        Map<String, String> error = orderService.createOrder(order);
+        if (error.isEmpty()) {
             redirectAttributes.addFlashAttribute("successMessage", "Đặt hàng thành công!");
         } else {
-            redirectAttributes.addFlashAttribute("failMessage", "Đặt hàng không thành công. Vui lòng thử lại.");
+            String message = null;
+            for (Map.Entry<String, String> entry : error.entrySet()) {
+                message = entry.getValue();
+            }
+            redirectAttributes.addFlashAttribute("failMessage", "Đặt hàng không thành công. " + message);
         }
         return "redirect:/order/new";
     }
 
-    //    @GetMapping("/edit/{id}")
-//    public String showUpdateForm(@PathVariable("id") Integer id, Model model) {
-//        Order order = orderService.getById(id);
-//        model.addAttribute("order", order);
-//        return "order/order-form";
-//    }
-//
+    @GetMapping("/{id}")
+    public String showDetailOrder(@PathVariable("id") Integer id, Model model) {
+        OrderList order = orderService.showDetailOrder(id);
+        model.addAttribute("order", order);
+        return "order/order-detail";
+    }
+
     @GetMapping("/delete/{id}")
     public String delete(@PathVariable("id") Integer id) {
         orderService.delete(id);

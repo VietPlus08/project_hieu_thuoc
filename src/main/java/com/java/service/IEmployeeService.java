@@ -14,6 +14,5 @@ public interface IEmployeeService {
     boolean delete(Integer id);
     Employee getById(Integer id);
     Page<Employee> listPaging(Pageable pageable);
-
     boolean authenticate(String username, String password);
 }

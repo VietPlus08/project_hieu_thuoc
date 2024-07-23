@@ -18,6 +18,7 @@ public class Customer {
     private String address;
     private String email;
     private int age;
+    private boolean isDelete = false;
 
     public Customer(Integer id) {
         this.id = id;

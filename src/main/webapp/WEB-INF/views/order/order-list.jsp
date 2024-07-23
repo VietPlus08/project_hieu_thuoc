@@ -328,7 +328,7 @@
     </div>
     <div class="nav-light-2">
         <div class="" style="display: flex">
-            <a href="/order/new" class="a-img">
+            <a href="${pageContext.request.contextPath}/order/new" class="a-img">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" width="50" height="50">
                     <!--!Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
                     <path d="M0 24C0 10.7 10.7 0 24 0L69.5 0c22 0 41.5 12.8 50.6 32l411 0c26.3 0 45.5 25 38.6 50.4l-41 152.3c-8.5 31.4-37 53.3-69.5 53.3l-288.5 0 5.4 28.5c2.2 11.3 12.1 19.5 23.6 19.5L488 336c13.3 0 24 10.7 24 24s-10.7 24-24 24l-288.3 0c-34.6 0-64.3-24.6-70.7-58.5L77.4 54.5c-.7-3.8-4-6.5-7.9-6.5L24 48C10.7 48 0 37.3 0 24zM128 464a48 48 0 1 1 96 0 48 48 0 1 1 -96 0zm336-48a48 48 0 1 1 0 96 48 48 0 1 1 0-96z"/>
@@ -365,7 +365,7 @@
         <div class="column1">
             <a href="">Chọn nhanh</a>
             <div class="horizontal-bar"></div>
-            <a href="/order/new">F2 - Bán hàng</a>
+            <a href="${pageContext.request.contextPath}/order/new">F2 - Bán hàng</a>
             <a href="">F3 - Nhập kho</a>
             <a href="">F4 - Xuất hoàn trả</a>
             <a href="">F5 - Xuất hủy</a>
@@ -380,13 +380,13 @@
         <div class="vertical-bar"></div>
         <div class="column2">
             <div class="sub-main-1">
-                <a href="">Trang chủ</a>
+                <a href="${pageContext.request.contextPath}/order/main">Trang chủ</a>
                 <a href="${pageContext.request.contextPath}/order">QL bán hàng</a>
                 <a href="${pageContext.request.contextPath}/order/new">Bán hàng</a>
             </div>
             <div class="horizontal-bar-right"></div>
             <div class="sub-main-2">
-                <a href="">1. Bán lẻ</a>
+                <a href="${pageContext.request.contextPath}/order/new">1. Bán lẻ</a>
                 <a href="">2. Bán theo đơn</a>
                 <a href="">3. Bán sỉ</a>
                 <a href="">4. Khách hoàn trả</a>
@@ -437,7 +437,6 @@
                 <div class="table-container">
                     <table class="table table-striped table-bordered">
                         <thead>
-
                         <tr>
                             <th>Mã hóa đơn</th>
                             <th>Tên Khách hàng</th>
@@ -447,29 +446,32 @@
                             <th>Tổng tiền</th>
                             <th>Ghi chú</th>
                         </tr>
-                        <c:forEach var="orderList" items="${orderLists}">
-                        <tr class="orderRow">
-                            <td>${orderList.id}</td>
-                            <td>${orderList.customer.name}</td>
-                            <td>${orderList.orderDate}</td>
-                            <td>${orderList.orderTime}</td>
-                            <td>${orderList.employee.name}</td>
-                            <td>${orderList.total}</td>
-                            <td></td>
-                        </tr>
                         </thead>
+                        <tbody>
+                        <c:forEach var="orderList" items="${orderLists}">
+                            <tr class="orderRow" data-order-id="${orderList.id}">>
+                                <td>${orderList.orderCode}</td>
+                                <td>${orderList.customer.name}</td>
+                                <td>${orderList.orderDate}</td>
+                                <td>${orderList.orderTime}</td>
+                                <td>${orderList.employee.name}</td>
+                                <td>${orderList.total}</td>
+                                <td></td>
+                            </tr>
                         </c:forEach>
+                        </tbody>
                     </table>
                 </div>
 
-                    <%--    <button type="button" class="btn btn-primary btn-sm" id="addRow">Thêm sản phẩm</button>--%>
                 <div class="main-all-button">
-                        <%--                    <input type="submit" value="Submit Order"/>--%>
-                    <button type="button" class="btn btn-outline-success btn-sm">Thêm</button>
+                        <%--                    <button type="button" class="btn btn-outline-success btn-sm">Thêm</button>--%>
+                    <a type="button" class="btn btn-outline-success btn-sm"
+                       href="${pageContext.request.contextPath}/order/new" style="width: 110px">Thêm</a>
                     <button type="button" class="btn btn-outline-danger btn-sm" id="deleteRow">Xóa</button>
-                    <button type="button" class="btn btn-outline-info btn-sm" id="deleteRow">Xem</button>
-                        <%--                        <a type="button" class="btn btn-outline-danger" id="deleteRow" href="#">Xóa</a>--%>
-                    <button type="button" class="btn btn-outline-secondary btn-sm" style="margin-right: 33px">Trở về</button>
+                    <button type="button" class="btn btn-outline-info btn-sm" id="viewRow">In hóa đơn</button>
+                    <a type="button" class="btn btn-outline-secondary btn-sm"
+                       href="${pageContext.request.contextPath}/order/main" style="width: 110px; margin-right: 33px">Trở về</a>
+                    </button>
                 </div>
             </div>
         </div>
@@ -485,56 +487,9 @@
 <script>
     $(document).ready(function () {
         var selectedRowIndex;
-        // $(document).on('change', '.orderSelect', function () {
-        //     var orderId = $(this).val();
-        //     var row = $('.orderRow:has(td:empty)').first();
-        //     console.log('product ' + orderId);
-        //     console.log(orderId !== '');
-        // Nếu chọn sản phẩm
-        // if (orderId !== '') {
-        //     var selectedProduct = getProductById(orderId);
-        //     console.log(selectedProduct);
-        //     console.log(selectedProduct.name);
-        //     if (selectedProduct) {
-        //         console.log(selectedProduct)
-        //         row.find('.product').text(selectedProduct.name);
-        //         row.find('.unit').text(selectedProduct.unit);
-        //         row.find('.price').text(selectedProduct.price.toFixed(2));
-        //         row.find('.quantity').prop('disabled', false);
-        //         row.find('.quantity').val(1);
-        //         var totalPrice = selectedProduct.price * row.find('.quantity').val();
-        //         row.find('.total').text(totalPrice.toFixed(2));
-        //         row.find('input[type="hidden"][name^="orderItems"]').val(selectedProduct.id);
-        //     } else {
-        //         alert('Không tìm thấy sản phẩm.');
-        //     }
-        // } else {
-        //     row.find('.product').text('');
-        //     row.find('.unit').text('');
-        //     row.find('.price').text('');
-        //     row.find('.quantity').val('').prop('disabled', true);
-        //     row.find('.total').text('');
-        //     updateGrandTotal();
-        // }
-        // });
-
-        // bắt event input khi nhập quantity
-        // $(document).on('input', '.quantity', function () {
-        //     var row = $(this).closest('tr');
-        //     var price = parseFloat(row.find('.price').text());
-        //     var quantity = parseFloat($(this).val());
-        //     if (!isNaN(price) && !isNaN(quantity)) {
-        //         var totalPrice = price * quantity;
-        //         row.find('.total').text(totalPrice.toFixed(2));
-        //     } else {
-        //         row.find('.total').text('');
-        //     }
-        //     updateGrandTotal();
-        // });
-
         // Bắt sự kiện click để chọn hàng và lấy ID của hàng
-        $('.orderRow').click(function () {
-            selectedRowIndex = $(this).data('index');
+        $(document).on('click', '.orderRow', function () {
+            selectedRowIndex = $(this).data('order-id');
             console.log('Selected Row Index:', selectedRowIndex);
             $(this).siblings().removeClass('selected');
             $(this).addClass('selected');
@@ -560,46 +515,29 @@
                 $(this).addClass('selected');
             });
         });
-
-        // $(document).ready(function () {
-        //     $('.productRow').click(function () {
-        //         var selectedRowIndex = $(this).data('index');
-        //         console.log('Selected Row Index:', selectedRowIndex);
-        //
-        //         $(this).siblings().removeClass('selected');
-        //         $(this).addClass('selected');
-        //     });
-        // });
-
-        $('#deleteRow').click(function () {
+// Bắt sự kiện click trên nút xem
+        $(document).on('click', '#viewRow', function (e) {
             if (selectedRowIndex !== undefined) {
-                var selectedRow = $('.orderRow').eq(selectedRowIndex);
-                // console.log(selectedRow);
-                // console.log(selectedRow.length);
-                if (selectedRow.length) {
-                    selectedRow.find('.product').html('');
-                    selectedRow.find('.unit').html('');
-                    selectedRow.find('.price').html('');
-                    selectedRow.find('.quantity').val('').prop('disabled', true);
-                    selectedRow.find('.total').html('');
-                    selectedRow.removeClass('selected');
-                    selectedRowIndex = undefined;
-                    console.log("Đã xóa dữ liệu của hàng được chọn.");
-                }
+                e.preventDefault();
+                var viewUrl = '/order/' + selectedRowIndex;
+                console.log(viewUrl);
+                $(this).attr('href', viewUrl);
+                window.location.href = viewUrl;
+            } else {
+                alert('Vui lòng chọn một hàng để xem.');
             }
         });
-
-        // function updateGrandTotal() {
-        //     var grandTotal = 0;
-        //     $('.productRow').each(function () {
-        //         var total = parseFloat($(this).find('.total').text());
-        //         if (!isNaN(total)) {
-        //             grandTotal += total;
-        //         }
-        //     });
-        //     $('.grandTotal').val(grandTotal.toFixed(2));
-        // }
-
+        $(document).on('click', '#deleteRow', function (e) {
+            if (selectedRowIndex !== undefined) {
+                e.preventDefault();
+                var viewUrl = '/order/delete/' + selectedRowIndex;
+                console.log(viewUrl);
+                $(this).attr('href', viewUrl);
+                window.location.href = viewUrl;
+            } else {
+                alert('Vui lòng chọn một hàng để xóa.');
+            }
+        });
 
     });
     document.addEventListener('DOMContentLoaded', function () {
@@ -615,7 +553,6 @@
         }
     });
     document.addEventListener('DOMContentLoaded', function () {
-        // alert('trang da tai xong');
         var alert = document.getElementById('alert2');
         if (alert) {
             alert.style.display = 'block';

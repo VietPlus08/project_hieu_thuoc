@@ -9,6 +9,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class OrderItemService implements IOrderItemService {
@@ -18,7 +19,7 @@ public class OrderItemService implements IOrderItemService {
 
     @Override
     public List<OrderItem> getList() {
-        return orderItemRepo.findAll();
+        return orderItemRepo.findAll().stream().filter(it -> !it.isDelete()).collect(Collectors.toList());
     }
 
     @Override

@@ -2,6 +2,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
 
+<html>
 <head>
     <meta charset="UTF-8">
     <title>Pharmacy Sales</title>
@@ -114,28 +115,28 @@
             box-shadow: 0 2px 0 var(--line-color-1);
         }
 
-        /*.search_center {*/
-        /*    text-align: center;*/
-        /*    height: 150px;*/
-        /*}*/
+        .search_center {
+            text-align: center;
+            height: 150px;
+        }
 
-        /*.main_title {*/
-        /*    display: flex;*/
-        /*    justify-content: center;*/
-        /*    padding: 16px 0 0 0;*/
-        /*    margin-bottom: 25px;*/
-        /*    position: relative;*/
-        /*    color: #000;*/
-        /*}*/
+        .main_title {
+            display: flex;
+            justify-content: center;
+            padding: 16px 0 0 0;
+            margin-bottom: 25px;
+            position: relative;
+            color: #000;
+        }
 
-        /*.main_title::after {*/
-        /*    content: "";*/
-        /*    position: absolute;*/
-        /*    bottom: -8px;*/
-        /*    width: 56px;*/
-        /*    height: 2px;*/
-        /*    background-color: var(--line-color-5);*/
-        /*}*/
+        .main_title::after {
+            content: "";
+            position: absolute;
+            bottom: -8px;
+            width: 56px;
+            height: 2px;
+            background-color: var(--line-color-5);
+        }
 
         .column1 {
             width: 20%;
@@ -151,37 +152,42 @@
             /*padding: 5px 0;*/
         }
 
-        .column1 a, .sub-main a, .sub-main-1 a, .sub-main-2 a {
+        .column1 a, .sub-main-1 a, .sub-main-2 a {
             color: #000;
             padding: 5px 20px;
             text-decoration: none;
         }
 
-        .sub-main, .sub-main-1, .sub-main-2 {
+        .sub-main-1, .sub-main-2 {
             display: flex;
             flex-wrap: wrap;
             /*padding: 5px;*/
         }
+        .sub-main {
 
-        /*.sub-main a {*/
-        /*    color: #000;*/
-        /*    padding: 5px 20px;*/
-        /*    text-decoration: none;*/
-        /*}*/
+         }
 
         .sub-main div {
             display: flex;
-            padding: 3px 0 5px 0;
+            padding: 0;
         }
 
         .sub-main span {
-            width: 110px;
+            width: 120px;
             padding-left: 10px;
         }
 
-        .sub-main input, .sub-main select {
-            width: 130px;
+        .sub-main input {
+            width: 180px;
             margin-right: 20px;
+        }
+
+        .sub-main img {
+            max-width: 100%;
+            height: auto;
+            /*border-radius: 10px;*/
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s;
         }
 
         .main {
@@ -199,27 +205,6 @@
             width: 110px;
         }
 
-        .orderRow input.form-control, .selectRow select, .inputRow input {
-            background-color: transparent;
-            border: none;
-        }
-
-        .orderRow input.form-control:focus, .selectRow select:focus, .inputRow input:focus {
-            border-color: inherit;
-            -webkit-box-shadow: none;
-            box-shadow: none;
-            outline: none;
-        }
-
-        .table-hover tbody tr:hover {
-            background-color: var(--line-color-1);
-            cursor: pointer;
-        }
-
-        .orderRow.selected, .container1 a.selected, .sub-main-1 a.selected, .sub-main-2 a.selected {
-            background-color: var(--line-color-1);
-        }
-
         .horizontal-bar {
             width: 100%;
             height: 1px;
@@ -227,8 +212,8 @@
         }
 
         .horizontal-bar-right {
-            width: 100%;
-            height: 1px;
+            width: 100%; /* Chiều rộng của thanh ngang sẽ chiếm toàn bộ chiều rộng của màn hình */
+            height: 1px; /* Chiều cao của thanh ngang, bạn có thể thay đổi theo ý muốn */
             background: linear-gradient(to right, rgba(64, 169, 255, 1) 50%, rgba(64, 169, 255, 0) 100%);
         }
 
@@ -260,22 +245,6 @@
             background-color: #f8d7da;
             color: #721c24;
             border: 1px solid #f5c6cb;
-        }
-
-        .table-container {
-            max-height: 550px; /* Chiều cao tối đa của bảng */
-            overflow-y: auto; /* Kích hoạt cuộn dọc */
-        }
-
-        table {
-            width: 100%;
-        }
-
-        .table thead th {
-            position: sticky;
-            top: 0;
-            background: white;
-            z-index: var(--primary-color-1);
         }
     </style>
 </head>
@@ -328,7 +297,7 @@
     </div>
     <div class="nav-light-2">
         <div class="" style="display: flex">
-            <a href="${pageContext.request.contextPath}/order/new" class="a-img">
+            <a href="/order/new" class="a-img">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" width="50" height="50">
                     <!--!Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
                     <path d="M0 24C0 10.7 10.7 0 24 0L69.5 0c22 0 41.5 12.8 50.6 32l411 0c26.3 0 45.5 25 38.6 50.4l-41 152.3c-8.5 31.4-37 53.3-69.5 53.3l-288.5 0 5.4 28.5c2.2 11.3 12.1 19.5 23.6 19.5L488 336c13.3 0 24 10.7 24 24s-10.7 24-24 24l-288.3 0c-34.6 0-64.3-24.6-70.7-58.5L77.4 54.5c-.7-3.8-4-6.5-7.9-6.5L24 48C10.7 48 0 37.3 0 24zM128 464a48 48 0 1 1 96 0 48 48 0 1 1 -96 0zm336-48a48 48 0 1 1 0 96 48 48 0 1 1 0-96z"/>
@@ -365,7 +334,7 @@
         <div class="column1">
             <a href="">Chọn nhanh</a>
             <div class="horizontal-bar"></div>
-            <a href="${pageContext.request.contextPath}/order/new">F2 - Bán hàng</a>
+            <a href="/order/new">F2 - Bán hàng</a>
             <a href="">F3 - Nhập kho</a>
             <a href="">F4 - Xuất hoàn trả</a>
             <a href="">F5 - Xuất hủy</a>
@@ -380,185 +349,48 @@
         <div class="vertical-bar"></div>
         <div class="column2">
             <div class="sub-main-1">
-                <a href="${pageContext.request.contextPath}/order/main">Trang chủ</a>
+                <a href="">Trang chủ</a>
                 <a href="${pageContext.request.contextPath}/order">QL bán hàng</a>
                 <a href="${pageContext.request.contextPath}/order/new">Bán hàng</a>
             </div>
             <div class="horizontal-bar-right"></div>
             <div class="sub-main-2">
-                <a href="${pageContext.request.contextPath}/order/new">1. Bán lẻ</a>
+                <a href="/order/new">1. Bán lẻ</a>
                 <a href="">2. Bán theo đơn</a>
                 <a href="">3. Bán sỉ</a>
                 <a href="">4. Khách hoàn trả</a>
             </div>
             <div class="horizontal-bar-right"></div>
-            <form:form modelAttribute="filterModel" method="post" action="/order/save">
-            <div class="sub-main p-2">
-                <div>
-                    <span>Từ ngày</span>
-                    <form:input type="date" path="startDate"/>
-                </div>
-                <div>
-                    <span>Đến ngày</span>
-                    <form:input type="date" path="endDate"/>
-                </div>
-                <div>
-                    <span>Từ giờ</span>
-                    <form:input type="time" path="startTime" cssStyle="width: 110px"/>
-                    <span>Đến giờ</span>
-                    <form:input type="time" path="endTime" cssStyle="width: 110px"/>
-                </div>
-                <div>
-                    <span>Hiển thị</span>
-                    <form:select path="orderType1" class="productSelect p-0">
-                        <form:option value="" label="Chọn loại"/>
-                        <c:forEach items="${list1}" var="item">
-                            <form:option value="${item}" label="${item}"/>
-                        </c:forEach>
-                    </form:select>
-                </div>
-                <div>
-                    <span>Sắp xếp theo</span>
-                    <form:select path="orderType2" class="productSelect p-0">
-                        <form:option value="1" label="Chọn loại"/>
-                        <c:forEach items="${list2}" var="item">
-                            <form:option value="${item}" label="${item}"/>
-                        </c:forEach>
-                    </form:select>
-                </div>
-
-                <div style="justify-content: flex-end; width: 465px">
-                    <button type="submit" class="btn btn-outline-info btn-sm">Xem</button>
-
-                </div>
+            <div class="sub-main">
+                <a href="/img/istockphoto-947192132-1024x1024.jpg">
+                    <img src="/img/istockphoto-947192132-1024x1024.jpg" alt="Description of the image">
+                </a>
             </div>
-
-            <div class="main p-1">
-                <div class="table-container">
-                    <table class="table table-striped table-bordered">
-                        <thead>
-                        <tr>
-                            <th>Mã hóa đơn</th>
-                            <th>Tên Khách hàng</th>
-                            <th>Ngày lập</th>
-                            <th>Giờ lập</th>
-                            <th>Người lập</th>
-                            <th>Tổng tiền</th>
-                            <th>Ghi chú</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <c:forEach var="orderList" items="${orderLists}">
-                            <tr class="orderRow" data-order-id="${orderList.id}">>
-                                <td>${orderList.orderCode}</td>
-                                <td>${orderList.customer.name}</td>
-                                <td>${orderList.orderDate}</td>
-                                <td>${orderList.orderTime}</td>
-                                <td>${orderList.employee.name}</td>
-                                <td>${orderList.total}</td>
-                                <td></td>
-                            </tr>
-                        </c:forEach>
-                        </tbody>
-                    </table>
-                </div>
-
-                <div class="main-all-button">
-                        <%--                    <button type="button" class="btn btn-outline-success btn-sm">Thêm</button>--%>
-                    <a type="button" class="btn btn-outline-success btn-sm"
-                       href="${pageContext.request.contextPath}/order/new" style="width: 110px">Thêm</a>
-                    <button type="button" class="btn btn-outline-danger btn-sm" id="deleteRow">Xóa</button>
-                    <button type="button" class="btn btn-outline-info btn-sm" id="viewRow">In hóa đơn</button>
-                    <a type="button" class="btn btn-outline-secondary btn-sm"
-                       href="${pageContext.request.contextPath}/order/main" style="width: 110px; margin-right: 33px">Trở về</a>
-                    </button>
-                </div>
-            </div>
-        </div>
-        </form:form>
     </div>
 </div>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<%--<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>--%>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-
 <script>
-    $(document).ready(function () {
-        var selectedRowIndex;
-        // Bắt sự kiện click để chọn hàng và lấy ID của hàng
-        $(document).on('click', '.orderRow', function () {
-            selectedRowIndex = $(this).data('order-id');
-            console.log('Selected Row Index:', selectedRowIndex);
-            $(this).siblings().removeClass('selected');
-            $(this).addClass('selected');
-        });
-        $(document).ready(function () {
-            $('.container1 a').click(function (event) {
-                event.preventDefault();
-                $('.container1 a').removeClass('selected');
-                $(this).addClass('selected');
-            });
-        });
-        $(document).ready(function () {
-            $('.sub-main-1 a').click(function (event) {
-                // event.preventDefault();
-                $('.sub-main-1 a').removeClass('selected');
-                $(this).addClass('selected');
-            });
-        });
-        $(document).ready(function () {
-            $('.sub-main-2 a').click(function (event) {
-                // event.preventDefault();
-                $('.sub-main-2 a').removeClass('selected');
-                $(this).addClass('selected');
-            });
-        });
-// Bắt sự kiện click trên nút xem
-        $(document).on('click', '#viewRow', function (e) {
-            if (selectedRowIndex !== undefined) {
-                e.preventDefault();
-                var viewUrl = '/order/' + selectedRowIndex;
-                console.log(viewUrl);
-                $(this).attr('href', viewUrl);
-                window.location.href = viewUrl;
-            } else {
-                alert('Vui lòng chọn một hàng để xem.');
-            }
-        });
-        $(document).on('click', '#deleteRow', function (e) {
-            if (selectedRowIndex !== undefined) {
-                e.preventDefault();
-                var viewUrl = '/order/delete/' + selectedRowIndex;
-                console.log(viewUrl);
-                $(this).attr('href', viewUrl);
-                window.location.href = viewUrl;
-            } else {
-                alert('Vui lòng chọn một hàng để xóa.');
-            }
-        });
-
-    });
-    document.addEventListener('DOMContentLoaded', function () {
+    document.addEventListener('DOMContentLoaded', function() {
         var alert = document.getElementById('alert1');
         if (alert) {
             alert.style.display = 'block';
-            setTimeout(function () {
+            setTimeout(function() {
                 alert.style.opacity = '0';
-                setTimeout(function () {
+                setTimeout(function() {
                     alert.style.display = 'none';
                 }, 1000);
             }, 5000);
         }
     });
-    document.addEventListener('DOMContentLoaded', function () {
+    document.addEventListener('DOMContentLoaded', function() {
+        // alert('trang da tai xong');
         var alert = document.getElementById('alert2');
         if (alert) {
             alert.style.display = 'block';
-            setTimeout(function () {
+            setTimeout(function() {
                 alert.style.opacity = '0';
-                setTimeout(function () {
+                setTimeout(function() {
                     alert.style.display = 'none';
                 }, 1000);
             }, 5000);

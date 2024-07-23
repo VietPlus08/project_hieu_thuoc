@@ -19,6 +19,8 @@ public class Product {
     private String description;
     private double price;
     private int quantity;
+//    @Column(columnDefinition = "bit default false")
+    private boolean isDelete = false;
 
     public Product(int productId) {
         this.id = productId;

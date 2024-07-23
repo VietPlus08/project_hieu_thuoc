@@ -5,17 +5,17 @@ import lombok.Setter;
 
 import javax.persistence.*;
 
-@Entity
-@Getter @Setter
+//@Entity
+//@Getter @Setter
 public class PrescriptionItem {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+//    @Id
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @ManyToOne
+//    @ManyToOne
     private Prescription prescription;
 
-    @ManyToOne
+//    @ManyToOne
     private Product product;
 
     private int quantity;

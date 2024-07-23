@@ -369,13 +369,13 @@
         <div class="vertical-bar"></div>
         <div class="column2">
             <div class="sub-main-1">
-                <a href="">Trang chủ</a>
+                <a href="${pageContext.request.contextPath}/order/main">Trang chủ</a>
                 <a href="${pageContext.request.contextPath}/order">QL bán hàng</a>
                 <a href="${pageContext.request.contextPath}/order/new">Bán hàng</a>
             </div>
             <div class="horizontal-bar-right"></div>
             <div class="sub-main-2">
-                <a href="">1. Bán lẻ</a>
+                <a href="${pageContext.request.contextPath}/order/new">1. Bán lẻ</a>
                 <a href="">2. Bán theo đơn</a>
                 <a href="">3. Bán sỉ</a>
                 <a href="">4. Khách hoàn trả</a>
@@ -438,17 +438,16 @@
                                     <form:input type="number" class="form-control quantity" name="quantity"
                                                 path="orderItems[${status.index}].quantity"/>
                                     <form:hidden path="orderItems[${status.index}].productId" value=""/>
-                                    <form:hidden path="orderItems[${status.index}].price" value=""/>
+                                        <%--                                    <form:hidden path="orderItems[${status.index}].price" value=""/>--%>
                                 </td>
                                 <td class="price"></td>
                                 <td class="total"></td>
                             </tr>
                         </c:forEach>
                         <tr class="inputRow">
-                            <td colspan="2"></td>
+                            <td colspan="3"></td>
                             <td class="text-right">Tổng tiền:</td>
                             <td><input type="text" class="form-control grandTotal p-0" readonly></td>
-                            <td></td>
                         </tr>
                         </tbody>
                     </table>
@@ -458,9 +457,8 @@
                         <%--                    <input type="submit" value="Submit Order"/>--%>
                     <button type="submit" class="btn btn-outline-success btn-sm">Thanh toán</button>
                     <button type="button" class="btn btn-outline-danger btn-sm" id="deleteRow">Xóa thuốc</button>
-                        <%--                        <a type="button" class="btn btn-outline-danger" id="deleteRow" href="#">Xóa</a>--%>
-                    <button type="button" class="btn btn-outline-secondary btn-sm" style="margin-right: 33px">Trở về</button>
-                </div>
+                    <a type="button" class="btn btn-outline-secondary btn-sm"
+                       href="${pageContext.request.contextPath}/order/main" style="width: 110px; margin-right: 33px">Trở về</a></div>
             </div>
         </div>
         </form:form>
@@ -469,13 +467,28 @@
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
+    var products = [];
+    <c:forEach var="product" items="${products}">
+    products.push({
+        id: "${product.id}",
+        name: "${product.name}",
+        unit: "${product.unit}",
+        price: parseFloat("${product.price}"),
+        quantity: parseInt("${product.quantity}", 10)
+    });
+    </c:forEach>
+
+    function getProductById(productId) {
+        return products.find(product => product.id.toString() === productId);
+    }
+
     $(document).ready(function () {
         var selectedRowIndex;
         $(document).on('change', '.productSelect', function () {
             var productId = $(this).val();
             var row = $('.productRow:has(td:empty)').first();
             console.log('product ' + productId);
-            console.log(productId !== '');
+            console.log('row' + row);
             // Nếu chọn sản phẩm
             if (productId !== '') {
                 var selectedProduct = getProductById(productId);
@@ -550,16 +563,6 @@
             });
         });
 
-        // $(document).ready(function () {
-        //     $('.productRow').click(function () {
-        //         var selectedRowIndex = $(this).data('index');
-        //         console.log('Selected Row Index:', selectedRowIndex);
-        //
-        //         $(this).siblings().removeClass('selected');
-        //         $(this).addClass('selected');
-        //     });
-        // });
-
         $('#deleteRow').click(function () {
             if (selectedRowIndex !== undefined) {
                 var selectedRow = $('.productRow').eq(selectedRowIndex);
@@ -578,13 +581,6 @@
             }
         });
 
-        // $(document).ready(function() {
-        //     $('.productSelect').change(function() {
-        //         var selectedValue = $(this).val();
-        //         $(this).val('');
-        //     });
-        // });
-
         function updateGrandTotal() {
             var grandTotal = 0;
             $('.productRow').each(function () {
@@ -597,103 +593,28 @@
         }
 
         // Function để lấy thông tin sản phẩm dựa trên productId (cần thay đổi tương ứng)
-        function getProductById(productId) {
-            var products = [
-                {
-                    id: 1,
-                    name: 'Paracetamol',
-                    unit: 'Viên nén',
-                    price: 5.00,
-                    quantity: 200
-                },
-                {
-                    id: 2,
-                    name: 'Ibuprofen',
-                    unit: 'Viên nén',
-                    price: 8.00,
-                    quantity: 150
-                },
-                {
-                    id: 3,
-                    name: 'Amoxicillin',
-                    unit: 'Viên nang',
-                    price: 12.50,
-                    quantity: 100
-                },
-                {
-                    id: 4,
-                    name: 'Ciprofloxacin',
-                    unit: 'Viên nén',
-                    price: 15.00,
-                    quantity: 80
-                },
-                {
-                    id: 5,
-                    name: 'Aspirin',
-                    unit: 'Viên nén',
-                    price: 3.50,
-                    quantity: 250
-                },
-                {
-                    id: 6,
-                    name: 'Metformin',
-                    unit: 'Viên nén',
-                    price: 7.20,
-                    quantity: 180
-                },
-                {
-                    id: 7,
-                    name: 'Omeprazole',
-                    unit: 'Viên nang',
-                    price: 9.00,
-                    quantity: 120
-                },
-                {
-                    id: 8,
-                    name: 'Atorvastatin',
-                    unit: 'Viên nén',
-                    price: 10.00,
-                    quantity: 130
-                },
-                {
-                    id: 9,
-                    name: 'Simvastatin',
-                    unit: 'Viên nén',
-                    price: 11.00,
-                    quantity: 110
-                },
-                {
-                    id: 10,
-                    name: 'Levothyroxine',
-                    unit: 'Viên nén',
-                    price: 6.00,
-                    quantity: 140
-                }
-            ];
 
-            return products.find(product => product.id.toString() === productId);
-        }
     });
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
         var alert = document.getElementById('alert1');
         if (alert) {
             alert.style.display = 'block';
-            setTimeout(function() {
+            setTimeout(function () {
                 alert.style.opacity = '0';
-                setTimeout(function() {
+                setTimeout(function () {
                     alert.style.display = 'none';
                 }, 1000);
             }, 5000);
         }
     });
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
         // alert('trang da tai xong');
         var alert = document.getElementById('alert2');
         if (alert) {
             alert.style.display = 'block';
-            setTimeout(function() {
+            setTimeout(function () {
                 alert.style.opacity = '0';
-                setTimeout(function() {
+                setTimeout(function () {
                     alert.style.display = 'none';
                 }, 1000);
             }, 5000);

@@ -7,6 +7,7 @@ import com.java.repo.*;
 import com.java.service.IOrderService;
 import com.java.service.IProductService;
 import com.java.utils.Const;
+import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -15,9 +16,7 @@ import org.springframework.stereotype.Service;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -43,7 +42,7 @@ public class OrderService implements IOrderService {
 
     @Override
     public List<OrderList> getList() {
-        return orderRepo.findAll();
+        return orderRepo.findAll().stream().filter(it -> !it.isDelete()).collect(Collectors.toList());
     }
 
     @Override
@@ -60,14 +59,18 @@ public class OrderService implements IOrderService {
 
     @Override
     public boolean delete(Integer id) {
-        orderRepo.deleteById(id);
-        return true;
+        Optional<OrderList> order = orderRepo.findById(id);
+        if (order.isPresent()) {
+            order.get().setDelete(true);
+            orderRepo.save(order.get());
+            return true;
+        }
+        return false;
     }
 
     @Override
     public OrderList getById(Integer id) {
-        OrderList result = orderRepo.getById(id);
-        return result;
+        return orderRepo.findById(id).orElse(null);
     }
 
     @Override
@@ -76,10 +79,50 @@ public class OrderService implements IOrderService {
     }
 
     @Override
-    public boolean createOrder(OrderDto orderDto) {
+    public Map<String, String> createOrder(OrderDto orderDto) {
+        Map<String, String> error = new HashMap<>();
+
         // kiểm tra order có dữ liệu gửi xuống ko
         orderDto = isOrderNull(orderDto);
-        if (orderDto == null) return false;
+        if (orderDto == null) {
+            error.put("NOT_VALID", "Vui lòng chọn số lượng thuốc.");
+            return error;
+        }
+
+        //create OrderItem entity
+        List<OrderItem> allOrderItems = new ArrayList<>();
+        List<Integer> productIds = orderDto.getOrderItems()
+                .stream().map(OrderItemDto::getProductId)
+                .collect(Collectors.toList());
+        Map<Integer, Product> inventoryProductHashMap = productService.getKeyValueInventoryProduct(productIds);
+
+        double totalPrice = 0d;
+        StringBuilder productsIsOut = new StringBuilder();
+        for (OrderItemDto item : orderDto.getOrderItems()) {
+            // Pair là kiểu dữ liệu key value, thư viện <artifactId>commons-lang3</artifactId>
+            Pair<Product, Boolean> pair = checkProductAvailable(item, inventoryProductHashMap);
+            Product currentProduct = pair.getLeft();
+            boolean isAvailable = pair.getRight();
+            if (isAvailable) {
+                OrderItem orderItem = new OrderItem();
+                orderItem.setProduct(new Product(item.getProductId()));
+                orderItem.setQuantity(item.getQuantity());
+                allOrderItems.add(orderItem);
+                totalPrice += item.getQuantity() * currentProduct.getPrice();
+                continue;
+            }
+            if (productsIsOut.length() > 0) {
+                productsIsOut.append(", ");
+            }
+            productsIsOut.append(currentProduct.getName())
+                    .append(" (số lượng còn lại: ")
+                    .append(currentProduct.getQuantity())
+                    .append(")");
+        }
+        if (productsIsOut.length() > 0) {
+            error.put("INVENTORY_IS_OUT", productsIsOut.toString());
+            return error;
+        }
 
         //create Order entity
         OrderList orderList = new OrderList();
@@ -89,45 +132,61 @@ public class OrderService implements IOrderService {
         orderList.setOrderTime(LocalTime.now());
         orderList = orderRepo.save(orderList);
 
-        //create OrderItem entity
-        List<OrderItem> allOrderItems = new ArrayList<>();
-        List<Integer> productIds = orderDto.getOrderItems().stream().map(OrderItemDto::getProductId).collect(Collectors.toList());
-        HashMap<Integer, Product> inventoryProductHashMap = productService.getKeyValueInventoryProduct(productIds);
-
-        double totalPrice = 0d;
-        for (OrderItemDto item : orderDto.getOrderItems()) {
-            if (isProductAvailable(item, inventoryProductHashMap)) {
-                OrderItem orderItem = new OrderItem();
-                orderItem.setProduct(new Product(item.getProductId()));
-                orderItem.setQuantity(item.getQuantity());
-                orderItem.setOrderList(orderList);
-                allOrderItems.add(orderItem);
-                totalPrice += item.getQuantity() * item.getPrice();
-                continue;
-            }
-            // cần xử lý lấy ra list gửi lại fe -> chưa làm
-            return false;
+        // save order items
+        for (OrderItem item : allOrderItems) {
+            item.setOrderList(orderList);
         }
         orderItemRepo.saveAll(allOrderItems);
 
-        // câp nhật total price cho order
+        // update total price cho order
         orderList.setTotal(totalPrice);
+        orderList.setOrderCode(String.format("HDL%05d", orderList.getId()));
         orderList = orderRepo.save(orderList);
 
         // cập nhật lại inventory
-        productService.saveHashMapProduct(inventoryProductHashMap);
-        return true;
+        productService.updateInventory(inventoryProductHashMap);
+        return error;
     }
 
-    private boolean isProductAvailable(OrderItemDto orderItem, HashMap<Integer, Product> inventoryProducts) {
-        if (inventoryProducts.containsKey(orderItem.getProductId())) {
-            Product inventoryProduct = inventoryProducts.get(orderItem.getProductId());
-            if (inventoryProduct.getQuantity() >= orderItem.getQuantity()) {
-                inventoryProduct.setQuantity(inventoryProduct.getQuantity() - orderItem.getQuantity());
-                return true;
-            }
+    @Override
+    public OrderDto createForm() {
+        OrderDto orderDto = new OrderDto();
+
+        // Tạo mã hóa đơn
+        orderDto.setOrderCode(getCurrentOrderCode());
+        orderDto.setCustomerName(Const.KHACH_LE.getName());
+        orderDto.setEmployeeName(Const.CURRENT_EMPLOYEE.getName());
+        orderDto.setOrderDate(Date.valueOf(LocalDate.now()));
+        return orderDto;
+    }
+
+    @Override
+    public OrderList showDetailOrder(Integer id) {
+        Optional<OrderList> optional = orderRepo.findById(id);
+        if (optional.isPresent()) {
+            OrderList order = optional.get();
+            List<OrderItem> orderItems = orderItemRepo.getOrderItemByOrderList(order);
+            order.setOrderItems(orderItems);
+            return order;
         }
-        return false;
+        return null;
+    }
+
+    private Integer generateId() {
+        Integer id = orderRepo.findTopByOrderByIdDesc().getId();
+        if (id == null) {
+            return 1;
+        }
+        return id + 1;
+    }
+
+    private Pair<Product, Boolean> checkProductAvailable(OrderItemDto orderItem, Map<Integer, Product> inventoryProducts) {
+        Product inventoryProduct = inventoryProducts.get(orderItem.getProductId());
+        if (inventoryProduct.getQuantity() >= orderItem.getQuantity()) {
+            inventoryProduct.setQuantity(inventoryProduct.getQuantity() - orderItem.getQuantity());
+            return Pair.of(inventoryProduct, true);
+        }
+        return Pair.of(inventoryProduct, false);
     }
 
     private OrderDto isOrderNull(OrderDto orderDto) {
@@ -140,25 +199,12 @@ public class OrderService implements IOrderService {
         return list.isEmpty() ? null : orderDto;
     }
 
-    @Override
-    public OrderDto createForm() {
-        OrderDto orderDto = new OrderDto();
-
-        // Tạo mã hóa đơn
-        orderDto.setOrderCode(getLastOrder());
-
-        orderDto.setCustomerName(Const.KHACH_LE.getName());
-        orderDto.setEmployeeName(Const.CURRENT_EMPLOYEE.getName());
-        orderDto.setOrderDate(Date.valueOf(LocalDate.now()));
-        return orderDto;
-    }
-
-    private String getLastOrder() {
+    private String getCurrentOrderCode() {
         OrderList lastOrder = orderRepo.findTopByOrderByIdDesc();
         if (lastOrder == null) {
             return String.format("HDL%05d", 1);
         }
-        return String.format("HDL%05d", lastOrder.getId());
+        return String.format("HDL%05d", lastOrder.getId() + 1);
     }
 
     private Customer getCustomer(String customer) {

@@ -9,12 +9,14 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CustomerService implements ICustomerService {
 
     @Autowired
     private CustomerRepo customerRepo;
+//    private CustomerRepo customerRepo1 = new CustomerRepo();
 
     public List<Customer> getList() {
         return customerRepo.findAll();
@@ -40,12 +42,16 @@ public class CustomerService implements ICustomerService {
 
     @Override
     public Customer getById(Integer id) {
-        Customer result = customerRepo.getById(id);
-        return result;
+        return customerRepo.findById(id).orElse(null);
     }
 
     @Override
     public Page<Customer> listPaging(Pageable pageable) {
         return null;
+    }
+
+    private void customMethod(){
+        Customer customer = customerRepo.findByName("123");
+        Customer customer1 = customerRepo.findByAgeBefore(10);
     }
 }

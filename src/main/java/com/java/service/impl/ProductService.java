@@ -11,6 +11,8 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class ProductService implements IProductService {
@@ -20,7 +22,7 @@ public class ProductService implements IProductService {
 
     @Override
     public List<Product> getList() {
-        return productRepo.findAll();
+        return productRepo.findAll().stream().filter(it -> !it.isDelete()).collect(Collectors.toList());
     }
 
     @Override
@@ -53,7 +55,7 @@ public class ProductService implements IProductService {
     }
 
     @Override
-    public HashMap<Integer, Product> getKeyValueInventoryProduct(List<Integer> productIds) {
+    public Map<Integer, Product> getKeyValueInventoryProduct(List<Integer> productIds) {
         HashMap<Integer, Product> hashMap = new HashMap<>();
         List<Product> products = productRepo.findAllById(productIds);
         for (Product product : products) {
@@ -63,7 +65,7 @@ public class ProductService implements IProductService {
     }
 
     @Override
-    public boolean saveHashMapProduct(HashMap<Integer, Product> inventoryProductHashMap) {
+    public boolean updateInventory(Map<Integer, Product> inventoryProductHashMap) {
         List<Product> products = new ArrayList<>(inventoryProductHashMap.values());
         productRepo.saveAll(products);
         return true;

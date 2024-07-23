@@ -13,4 +13,5 @@ public interface ICustomerService {
     boolean delete(Integer id);
     Customer getById(Integer id);
     Page<Customer> listPaging(Pageable pageable);
+//    Customer findByName(String name);
 }

@@ -6,6 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
+import java.util.Map;
 
 public interface IOrderService {
     List<OrderList> getList();
@@ -14,8 +15,7 @@ public interface IOrderService {
     boolean delete(Integer id);
     OrderList getById(Integer id);
     Page<OrderList> listPaging(Pageable pageable);
-
-    boolean createOrder(OrderDto order);
-
+    Map<String, String> createOrder(OrderDto order);
     OrderDto createForm();
+    OrderList showDetailOrder(Integer id);
 }

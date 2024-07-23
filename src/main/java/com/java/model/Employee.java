@@ -19,6 +19,7 @@ public class Employee {
     private String account;
     private String password;
     private String role;
+    private boolean isDelete = false;
 
     public Employee(Integer id) {
         this.id = id;
