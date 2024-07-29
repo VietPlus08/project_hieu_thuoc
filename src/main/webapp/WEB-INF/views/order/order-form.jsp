@@ -354,7 +354,7 @@
         <div class="column1">
             <a href="">Chọn nhanh</a>
             <div class="horizontal-bar"></div>
-            <a href="/order/new">F2 - Bán hàng</a>
+            <a href="${pageContext.request.contextPath}/order/new">F2 - Bán hàng</a>
             <a href="">F3 - Nhập kho</a>
             <a href="">F4 - Xuất hoàn trả</a>
             <a href="">F5 - Xuất hủy</a>
@@ -608,7 +608,6 @@
         }
     });
     document.addEventListener('DOMContentLoaded', function () {
-        // alert('trang da tai xong');
         var alert = document.getElementById('alert2');
         if (alert) {
             alert.style.display = 'block';

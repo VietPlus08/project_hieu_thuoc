@@ -1,5 +1,6 @@
 package com.java.dto;
 
+import com.java.utils.Const;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -14,4 +15,9 @@ public class FilterModel {
     LocalTime endTime;
     String orderType1;
     String orderType2;
+
+    public FilterModel() {
+        orderType1 = Const.LIST_FILTER_1[0];
+        orderType2 = Const.LIST_FILTER_2[0];
+    }
 }

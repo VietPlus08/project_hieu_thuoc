@@ -1,5 +1,6 @@
 package com.java.service.impl;
 
+import com.java.dto.FilterModel;
 import com.java.dto.OrderDto;
 import com.java.dto.OrderItemDto;
 import com.java.model.*;
@@ -9,8 +10,6 @@ import com.java.service.IProductService;
 import com.java.utils.Const;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.sql.Date;
@@ -74,8 +73,15 @@ public class OrderService implements IOrderService {
     }
 
     @Override
-    public Page<OrderList> listPaging(Pageable pageable) {
-        return null;
+    public List<OrderList> filter(FilterModel filterModel) {
+        if (filterModel.getStartTime() == null) {
+            filterModel.setStartTime(LocalTime.MIDNIGHT);
+        }
+        if (filterModel.getEndTime() == null) {
+            filterModel.setEndTime(LocalTime.of(23, 59));
+        }
+        return orderRepo.findOrders(filterModel.getStartDate(), filterModel.getEndDate());
+//        return orderRepo.findOrdersWithinDateRange(filterModel.getStartDate(), filterModel.getStartTime(), filterModel.getEndDate(), filterModel.getEndTime());
     }
 
     @Override
@@ -91,9 +97,16 @@ public class OrderService implements IOrderService {
 
         //create OrderItem entity
         List<OrderItem> allOrderItems = new ArrayList<>();
-        List<Integer> productIds = orderDto.getOrderItems()
-                .stream().map(OrderItemDto::getProductId)
-                .collect(Collectors.toList());
+        // foreach qua orderDto, lấy ra tất orderItem --> productId
+//        List<Integer> productIds = orderDto.getOrderItems()
+//                .stream().map(OrderItemDto::getProductId)
+//                .collect(Collectors.toList());
+        List<Integer> productIds = new ArrayList<>();
+        for (OrderItemDto item : orderDto.getOrderItems()) {
+            productIds.add(item.getProductId());
+        }
+
+        // key-> productId, value -> product (quanity)
         Map<Integer, Product> inventoryProductHashMap = productService.getKeyValueInventoryProduct(productIds);
 
         double totalPrice = 0d;
@@ -104,20 +117,23 @@ public class OrderService implements IOrderService {
             Product currentProduct = pair.getLeft();
             boolean isAvailable = pair.getRight();
             if (isAvailable) {
+                // còn hàng -> xử lý logic
                 OrderItem orderItem = new OrderItem();
                 orderItem.setProduct(new Product(item.getProductId()));
                 orderItem.setQuantity(item.getQuantity());
-                allOrderItems.add(orderItem);
+                allOrderItems.add(orderItem); // list cần lưu db
                 totalPrice += item.getQuantity() * currentProduct.getPrice();
-                continue;
+            } else {
+                // báo error
+                if (productsIsOut.length() > 0) {
+                    productsIsOut.append(", ");
+                }
+                productsIsOut.append(currentProduct.getName())
+                        .append(" (số lượng còn lại: ")
+                        .append(currentProduct.getQuantity())
+                        .append(")");
             }
-            if (productsIsOut.length() > 0) {
-                productsIsOut.append(", ");
-            }
-            productsIsOut.append(currentProduct.getName())
-                    .append(" (số lượng còn lại: ")
-                    .append(currentProduct.getQuantity())
-                    .append(")");
+
         }
         if (productsIsOut.length() > 0) {
             error.put("INVENTORY_IS_OUT", productsIsOut.toString());
@@ -130,10 +146,11 @@ public class OrderService implements IOrderService {
         orderList.setCustomer(getCustomer(Const.KHACH_LE.getName()));
         orderList.setEmployee(getCurrentEmployee());
         orderList.setOrderTime(LocalTime.now());
-        orderList = orderRepo.save(orderList);
+        orderList = orderRepo.save(orderList); // return orderlist có Id
 
         // save order items
         for (OrderItem item : allOrderItems) {
+            // khóa ngoại oder
             item.setOrderList(orderList);
         }
         orderItemRepo.saveAll(allOrderItems);

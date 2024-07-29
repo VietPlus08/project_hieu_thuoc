@@ -51,7 +51,7 @@ public class CustomerService implements ICustomerService {
     }
 
     private void customMethod(){
-        Customer customer = customerRepo.findByName("123");
-        Customer customer1 = customerRepo.findByAgeBefore(10);
+//        Customer customer = customerRepo.findByName("123");
+//        Customer customer1 = customerRepo.findByAgeBefore(10);
     }
 }

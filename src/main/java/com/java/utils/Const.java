@@ -9,7 +9,7 @@ public class Const {
     public static Customer KHACH_THEO_TOA = new Customer(3, "Khách theo toa");
     public static String[] DANH_SACH_KHACH = {"Khách lẻ", "Khách sỉ", "Khách theo toa"};
     public static String[] LIST_FILTER_1 = {"Bán lẻ", "Bán sỉ", "Bán theo đơn", "Khách hoàn trả"};
-    public static String[] LIST_FILTER_2 = {"Bán lẻ", "Bán sỉ", "Bán theo đơn", "Khách hoàn trả"};
+    public static String[] LIST_FILTER_2 = {"Tên khách", "Ngày lập", "Tổng tiền"};
 
     public static Employee CURRENT_EMPLOYEE = new Employee(1, "Nguyễn Hoàng Nhật");
 }

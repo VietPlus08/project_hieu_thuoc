@@ -1,9 +1,9 @@
 package com.java.service.impl;
 
-import com.java.model.Customer;
 import com.java.model.Employee;
 import com.java.repo.EmployeeRepo;
 import com.java.service.IEmployeeService;
+import com.java.utils.Const;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -42,8 +42,7 @@ public class EmployeeService implements IEmployeeService {
 
     @Override
     public Employee getById(Integer id) {
-        Employee result = employeeRepo.getById(id);
-        return result;
+        return employeeRepo.findById(id).orElse(null);
     }
 
     @Override
@@ -53,6 +52,21 @@ public class EmployeeService implements IEmployeeService {
 
     @Override
     public boolean authenticate(String username, String password) {
-        return false;
+        if (username == null || username.isEmpty() || password == null || password.isEmpty()) return false;
+        Employee employee = employeeRepo.findByAccount(username);
+        if (employee == null) return false;
+        return employee.getPassword().equals(password);
+    }
+
+    public void updateStaticAccount() {
+        Employee employee = employeeRepo.findById(Const.CURRENT_EMPLOYEE.getId()).orElse(null);
+        if (employee == null) {
+            employee = new Employee();
+            employee.setName("Bác Nhật");
+            employee.setEmail("nhat@gmail.com");
+            employee.setAccount("nhat");
+            employee.setPassword("1234");
+            employeeRepo.save(employee);
+        }
     }
 }

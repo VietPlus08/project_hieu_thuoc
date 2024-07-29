@@ -392,7 +392,7 @@
                 <a href="">4. Khách hoàn trả</a>
             </div>
             <div class="horizontal-bar-right"></div>
-            <form:form modelAttribute="filterModel" method="post" action="/order/save">
+            <form:form modelAttribute="filterModel" method="post" action="/order/filter">
             <div class="sub-main p-2">
                 <div>
                     <span>Từ ngày</span>
