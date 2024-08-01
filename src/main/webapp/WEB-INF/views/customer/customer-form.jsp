@@ -5,8 +5,7 @@
 </head>
 <body>
 <h2>Customer Form</h2>
-<form method="post" action="${pageContext.request.contextPath}/customer/save">
-    <input type="hidden" name="id" value="${customer.id}"/>
+<form method="post" action="/customer/save">
     Name: <input type="text" name="name" value="${customer.name}"/><br/>
     Address: <input type="text" name="address" value="${customer.address}"/><br/>
     Email: <input type="text" name="email" value="${customer.email}"/><br/>
@@ -14,6 +13,6 @@
     <input type="submit" value="Save"/>
 </form>
 <br/>
-<a href="${pageContext.request.contextPath}/customer">Back to Customer List</a>
+<a href="/customer">Back to Customer List</a>
 </body>
 </html>

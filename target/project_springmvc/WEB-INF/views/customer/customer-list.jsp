@@ -8,29 +8,56 @@
 <h2>Customer List</h2>
 <table border="1">
     <tr>
-        <th>ID</th>
+        <th>Id</th>
         <th>Name</th>
-        <th>Address</th>
-        <th>Email</th>
         <th>Age</th>
+        <th>Email</th>
         <th>Action</th>
     </tr>
+
     <c:forEach var="customer" items="${customers}">
         <tr>
             <td>${customer.id}</td>
             <td>${customer.name}</td>
-            <td>${customer.address}</td>
-            <td>${customer.email}</td>
             <td>${customer.age}</td>
+            <td>${customer.email}</td>
             <td>
-                <a href="${pageContext.request.contextPath}/customer/edit/${customer.id}">Edit</a>
-                &nbsp;|&nbsp;
-                <a href="${pageContext.request.contextPath}/customer/delete/${customer.id}">Delete</a>
+                <a href="/customer/edit/${customer.id}">Edit</a> |
+                <a href="/customer/delete/${customer.id}">Delete</a>
             </td>
         </tr>
     </c:forEach>
+
 </table>
+
+
+
+
+<%--<table border="1">--%>
+<%--    <tr>--%>
+<%--        <th>ID</th>--%>
+<%--        <th>Name</th>--%>
+<%--        <th>Address</th>--%>
+<%--        <th>Email</th>--%>
+<%--        <th>Age</th>--%>
+<%--        <th>Action</th>--%>
+<%--    </tr>--%>
+<%--    <c:forEach var="customer" items="${customers}">--%>
+<%--        <tr>--%>
+<%--            <td>${customer.id}</td>--%>
+<%--            <td>${customer.name}</td>--%>
+<%--            <td>${customer.address}</td>--%>
+<%--            <td>${customer.email}</td>--%>
+<%--            <td>${customer.age}</td>--%>
+<%--            <td>--%>
+<%--                <a href="/customer/edit/${customer.id}">Edit</a>--%>
+<%--                &nbsp;|&nbsp;--%>
+<%--                <a href="/customer/delete/${customer.id}">Delete</a>--%>
+<%--            </td>--%>
+<%--        </tr>--%>
+<%--    </c:forEach>--%>
+<%--</table>--%>
 <br/>
-<a href="${pageContext.request.contextPath}/customer/new">Add New Customer</a>
+<a href="/customer/new">Add New Customer</a>
 </body>
 </html>
