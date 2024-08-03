@@ -114,7 +114,7 @@
                 ${failMessage}
         </div>
     </c:if>
-    <form action="${pageContext.request.contextPath}/login/authenticate" id="form-login" method="post">
+    <form action="/login/authenticate" id="form-login" method="post">
         <h1 class="form-heading" style="margin-bottom: 0">Đăng nhập</h1>
         <h2 class="form-heading" style="margin-top: 10px">Quản lý hiệu thuốc</h2>
         <div class="form-group">
@@ -127,7 +127,7 @@
         </div>
         <input type="submit" value="Đăng nhập" class="form-submit">
     </form>
-    <a href="${pageContext.request.contextPath}/login/register" class="form-link">Đăng ký tài khoản</a>
+    <a href="/login/register-form" class="form-link">Đăng ký tài khoản</a>
     <!-- Liên kết đến trang đăng ký -->
 </div>
 

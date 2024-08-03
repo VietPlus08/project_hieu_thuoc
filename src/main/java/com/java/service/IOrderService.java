@@ -15,6 +15,6 @@ public interface IOrderService {
     OrderList getById(Integer id);
     List<OrderList> filter(FilterModel filterModel);
     Map<String, String> createOrder(OrderDto order);
-    OrderDto createForm();
+    OrderDto createForm(String name);
     OrderList showDetailOrder(Integer id);
 }

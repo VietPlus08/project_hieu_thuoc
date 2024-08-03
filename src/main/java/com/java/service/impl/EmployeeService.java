@@ -1,9 +1,11 @@
 package com.java.service.impl;
 
+import com.java.dto.EmployeeDto;
 import com.java.model.Employee;
 import com.java.repo.EmployeeRepo;
 import com.java.service.IEmployeeService;
 import com.java.utils.Const;
+import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -23,9 +25,16 @@ public class EmployeeService implements IEmployeeService {
     }
 
     @Override
-    public boolean create(Employee employee) {
-        Employee result = employeeRepo.save(employee);
-        return true;
+    public Employee create(EmployeeDto dto) {
+        Employee employee = new Employee();
+        employee.setName(dto.getName());
+        employee.setAddress(dto.getAddress());
+        employee.setEmail(dto.getEmail());
+        employee.setAccount(dto.getAccount());
+        employee.setPassword(dto.getPassword());
+
+        employee = employeeRepo.save(employee);
+        return employee;
     }
 
     @Override
@@ -46,16 +55,26 @@ public class EmployeeService implements IEmployeeService {
     }
 
     @Override
+    public Employee getByName(String name) {
+        return employeeRepo.findByName(name);
+    }
+
+    @Override
     public Page<Employee> listPaging(Pageable pageable) {
         return null;
     }
 
     @Override
-    public boolean authenticate(String username, String password) {
-        if (username == null || username.isEmpty() || password == null || password.isEmpty()) return false;
+    public Pair<Boolean, Employee> authenticate(String username, String password) {
+        if (username == null || username.isEmpty() || password == null || password.isEmpty()){
+            return Pair.of(false, null);
+        }
+
         Employee employee = employeeRepo.findByAccount(username);
-        if (employee == null) return false;
-        return employee.getPassword().equals(password);
+        if (employee == null || !employee.getPassword().equals(password)) {
+            return Pair.of(false, null);
+        }
+        return Pair.of(true, employee);
     }
 
     public void updateStaticAccount() {

@@ -1,17 +1,19 @@
 package com.java.controller;
 
+import com.java.dto.EmployeeDto;
+import com.java.model.Employee;
 import com.java.service.IEmployeeService;
 import com.java.service.impl.EmployeeService;
+import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 
 @Controller
 @RequestMapping("/login")
@@ -22,7 +24,7 @@ public class LoginController {
 
     @GetMapping
     public String showLoginForm() {
-        return "login/login-form"; // Đây là tên của file JSP hoặc Thymeleaf template (ví dụ: login-form.jsp)
+        return "login/login-form";
     }
 
     @PostMapping("/authenticate")
@@ -30,9 +32,12 @@ public class LoginController {
                                Model model,
                                HttpSession session,
                                RedirectAttributes redirectAttributes) {
-        boolean isAuthenticated = employeeService.authenticate(username, password);
+        Pair<Boolean, Employee> result = employeeService.authenticate(username, password);
+        boolean isAuthenticated = result.getLeft();
+        Employee employee = result.getRight();
         if (isAuthenticated) {
             session.setAttribute("username", username);
+            session.setAttribute("fullName", employee.getName());
             return "redirect:/order";
         } else {
 //            redirectAttributes.addFlashAttribute("failMessage", "Tên đăng nhập hoặc mật khẩu không đúng");
@@ -41,9 +46,20 @@ public class LoginController {
         }
     }
 
-    @GetMapping("/register")
-    public String showRegisterForm() {
+    @GetMapping("/register-form")
+    public String showRegisterForm(Model model) {
+        model.addAttribute("employee", new EmployeeDto());
         return "login/register-form";
+    }
+
+    @PostMapping("/register")
+    public String register(@Valid @ModelAttribute("employee") EmployeeDto employee, BindingResult bindingResult, Model model) {
+        if (bindingResult.hasErrors()){
+            model.addAttribute("employee", employee);
+            return "login/register-form";
+        }
+        Employee result = employeeService.create(employee);
+        return "redirect:/login";
     }
 
     @GetMapping("/staticData")

@@ -144,7 +144,8 @@ public class OrderService implements IOrderService {
         OrderList orderList = new OrderList();
         orderList.setOrderDate(Date.valueOf(LocalDate.now()));
         orderList.setCustomer(getCustomer(Const.KHACH_LE.getName()));
-        orderList.setEmployee(getCurrentEmployee());
+        Employee employee = employeeRepo.findByName(orderDto.getEmployeeName());
+        orderList.setEmployee(employee);
         orderList.setOrderTime(LocalTime.now());
         orderList = orderRepo.save(orderList); // return orderlist có Id
 
@@ -166,13 +167,13 @@ public class OrderService implements IOrderService {
     }
 
     @Override
-    public OrderDto createForm() {
+    public OrderDto createForm(String name) {
         OrderDto orderDto = new OrderDto();
 
         // Tạo mã hóa đơn
         orderDto.setOrderCode(getCurrentOrderCode());
         orderDto.setCustomerName(Const.KHACH_LE.getName());
-        orderDto.setEmployeeName(Const.CURRENT_EMPLOYEE.getName());
+        orderDto.setEmployeeName(name);
         orderDto.setOrderDate(Date.valueOf(LocalDate.now()));
         return orderDto;
     }

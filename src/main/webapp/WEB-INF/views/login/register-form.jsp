@@ -1,3 +1,4 @@
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
          pageEncoding="UTF-8" %>
 <!DOCTYPE html>
@@ -23,7 +24,7 @@
         }
 
         .form-group {
-            margin-bottom: 15px;
+            margin-top: 15px;
             display: flex;
             align-items: center;
         }
@@ -44,6 +45,7 @@
             border: none;
             border-radius: 4px;
             cursor: pointer;
+            margin-top: 15px;
         }
 
         .form-submit:hover {
@@ -61,40 +63,52 @@
         .form-link:hover {
             text-decoration: underline;
         }
+
+        .error {
+            margin-top: 6px;
+            margin-left: 20px;
+            color: red;
+        }
     </style>
 </head>
 <body>
 <div id="wrapper">
-    <form action="" id="form-register">
+    <form:form action="/login/register" id="form-register" method="post" modelAttribute="employee">
         <h1 class="form-heading" style="margin-bottom: 0">Đăng ký</h1>
         <h2 class="form-heading" style="margin-top: 10px">Quản lý hiệu thuốc</h2>
         <div class="form-group">
             <i class="far fa-user"></i>
-            <input type="text" class="form-input" placeholder="Họ tên">
+            <form:input class="form-input" placeholder="Họ tên" path="name"/> <br>
         </div>
+            <form:errors path="name" cssClass="error"/>
         <div class="form-group">
             <i class="far fa-envelope"></i>
-            <input type="email" class="form-input" placeholder="Email">
+            <form:input class="form-input" placeholder="Email" path="email"/> <br>
         </div>
+            <form:errors path="email" cssClass="error"/>
         <div class="form-group">
             <i class="far fa-envelope"></i>
-            <input type="number" class="form-input" placeholder="Số điện thoại">
+            <form:input class="form-input" placeholder="Số điện thoại" path="address"/> <br>
         </div>
+            <form:errors path="address" cssClass="error"/>
         <div class="form-group">
             <i class="far fa-user"></i>
-            <input type="text" class="form-input" placeholder="Tên đăng nhập">
+            <form:input class="form-input" placeholder="Tên đăng nhập" path="account"/> <br>
         </div>
+            <form:errors path="account" cssClass="error"/>
         <div class="form-group">
             <i class="far fa-key"></i>
-            <input type="password" class="form-input" placeholder="Mật khẩu">
+            <form:input type="password" class="form-input" placeholder="Mật khẩu" path="password"/> <br>
         </div>
+            <form:errors path="password" cssClass="error"/>
         <div class="form-group">
             <i class="far fa-key"></i>
-            <input type="password" class="form-input" placeholder="Xác nhận mật khẩu">
+            <form:input type="password" class="form-input" placeholder="Xác nhận mật khẩu" path="rePassword"/> <br>
         </div>
+            <form:errors path="rePassword" cssClass="error"/>
         <input type="submit" value="Đăng ký" class="form-submit">
         <a href="/login" class="form-link">Đã có tài khoản? Đăng nhập</a>
-    </form>
+    </form:form>
 </div>
 </body>
 </html>

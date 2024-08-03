@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
 
 <head>
@@ -449,10 +450,10 @@
                         </thead>
                         <tbody>
                         <c:forEach var="orderList" items="${orderLists}">
-                            <tr class="orderRow" data-order-id="${orderList.id}">>
+                            <tr class="orderRow" data-order-id="${orderList.id}">
                                 <td>${orderList.orderCode}</td>
                                 <td>${orderList.customer.name}</td>
-                                <td>${orderList.orderDate}</td>
+                                <td><fmt:formatDate value="${orderList.orderDate}" pattern="dd/MM/yyyy"/></td>
                                 <td>${orderList.orderTime}</td>
                                 <td>${orderList.employee.name}</td>
                                 <td>${orderList.total}</td>

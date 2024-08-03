@@ -2,15 +2,10 @@ package com.java.controller;
 
 import com.java.dto.FilterModel;
 import com.java.dto.OrderDto;
-import com.java.dto.OrderItemDto;
-import com.java.model.Customer;
+import com.java.model.Employee;
 import com.java.model.OrderList;
-import com.java.service.impl.CustomerService;
-import com.java.service.impl.OrderItemService;
-import com.java.service.impl.OrderService;
-import com.java.service.impl.ProductService;
+import com.java.service.impl.*;
 import com.java.utils.Const;
-import com.sun.org.apache.xpath.internal.operations.Mod;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -38,6 +33,9 @@ public class OrderController {
     @Autowired
     private ProductService productService;
 
+    @Autowired
+    private EmployeeService employeeService;
+
     @GetMapping("/main")
     public String main() {
         return "order/order-main";
@@ -61,7 +59,9 @@ public class OrderController {
 //            return "login/login-form";
 //        }
 //        Customer customer = new Customer();
-        OrderDto orderDto = orderService.createForm();
+        String employeeName = (String) session.getAttribute("fullName");
+//        if (employeeName == null || employeeName.isEmpty()) employeeName = Const.CURRENT_EMPLOYEE.getName();
+        OrderDto orderDto = orderService.createForm(employeeName);
 //        model.addAttribute("customer", customer);
         model.addAttribute("products", productService.getList());
         model.addAttribute("orderItems", orderItemService.getList());
@@ -76,6 +76,9 @@ public class OrderController {
 //        if(session.getAttribute("username") == null){
 //            return "login/login-form";
 //        }
+        String employeeName = (String) session.getAttribute("fullName");
+//        Employee employee = employeeService.getByName(employeeName);
+        order.setEmployeeName(employeeName);
         Map<String, String> error = orderService.createOrder(order);
         if (error.isEmpty()) {
             redirectAttributes.addFlashAttribute("successMessage", "Đặt hàng thành công!");
