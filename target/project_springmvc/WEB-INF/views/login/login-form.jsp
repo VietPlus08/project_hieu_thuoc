@@ -110,7 +110,7 @@
 <body>
 <div id="wrapper">
     <c:if test="${not empty failMessage}">
-        <div id="alert" class="alert alert-success">
+        <div id="alert" class="alert alert-danger">
                 ${failMessage}
         </div>
     </c:if>

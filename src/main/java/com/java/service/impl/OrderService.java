@@ -80,7 +80,45 @@ public class OrderService implements IOrderService {
         if (filterModel.getEndTime() == null) {
             filterModel.setEndTime(LocalTime.of(23, 59));
         }
-        return orderRepo.findOrders(filterModel.getStartDate(), filterModel.getEndDate());
+        List<OrderList> result = orderRepo.findOrders(filterModel.getStartDate(), filterModel.getEndDate());
+        // filter "Khach si" , "Khach le"
+        switch (filterModel.getOrderType1()){
+            case Const.BAN_SI:
+                result = result.stream().filter(it -> it.getCustomer() != null
+                        && it.getCustomer().getName().equals(Const.KHACH_SI.getName())).collect(Collectors.toList());
+                break;
+            case Const.BAN_THEO_DON:
+                result = result.stream().filter(it -> it.getCustomer() != null
+                        && it.getCustomer().getName().equals(Const.KHACH_THEO_TOA.getName())).collect(Collectors.toList());
+                break;
+            default:
+                result = result.stream().filter(it -> it.getCustomer() != null
+                        && it.getCustomer().getName().equals(Const.KHACH_LE.getName())).collect(Collectors.toList());
+                break;
+        }
+
+        switch (filterModel.getOrderType2()){
+            case Const.TEN_KHACH:
+                result = result.stream()
+                        .filter(it -> it.getCustomer() != null && it.getCustomer().getName() != null)
+                        .sorted(Comparator.comparing((OrderList it) -> it.getCustomer().getName()).reversed())
+                        .collect(Collectors.toList());
+                break;
+            case Const.TONG_TIEN:
+                result = result.stream()
+                        .filter(it -> it.getTotal() != 0)
+                        .sorted(Comparator.comparing((OrderList it) -> it.getTotal()).reversed())
+                        .collect(Collectors.toList());
+                break;
+            default:
+                result = result.stream()
+//                        .filter(it -> it.getOrderDate() != 0)
+                        .sorted(Comparator.comparing((OrderList it) -> it.getOrderDate()).reversed())
+                        .collect(Collectors.toList());
+                break;
+        }
+
+        return result;
 //        return orderRepo.findOrdersWithinDateRange(filterModel.getStartDate(), filterModel.getStartTime(), filterModel.getEndDate(), filterModel.getEndTime());
     }
 
@@ -89,18 +127,17 @@ public class OrderService implements IOrderService {
         Map<String, String> error = new HashMap<>();
 
         // kiểm tra order có dữ liệu gửi xuống ko
-        orderDto = isOrderNull(orderDto);
+        Pair<String, OrderDto> check = isOrderNull(orderDto);
+        String messageError = check.getLeft();
+        orderDto = check.getRight();
         if (orderDto == null) {
-            error.put("NOT_VALID", "Vui lòng chọn số lượng thuốc.");
+            error.put("NOT_VALID", messageError);
             return error;
         }
 
         //create OrderItem entity
         List<OrderItem> allOrderItems = new ArrayList<>();
         // foreach qua orderDto, lấy ra tất orderItem --> productId
-//        List<Integer> productIds = orderDto.getOrderItems()
-//                .stream().map(OrderItemDto::getProductId)
-//                .collect(Collectors.toList());
         List<Integer> productIds = new ArrayList<>();
         for (OrderItemDto item : orderDto.getOrderItems()) {
             productIds.add(item.getProductId());
@@ -207,14 +244,21 @@ public class OrderService implements IOrderService {
         return Pair.of(inventoryProduct, false);
     }
 
-    private OrderDto isOrderNull(OrderDto orderDto) {
+    private Pair<String, OrderDto> isOrderNull(OrderDto orderDto) {
         List<OrderItemDto> list = new ArrayList<>();
         for (OrderItemDto item : orderDto.getOrderItems()) {
-            if (item.getProductId() == 0) continue;
+            if (item.getProductId() == 0) {
+                continue;
+            }
+            if (item.getQuantity() <= 0){
+                return Pair.of("Vui long nhập số lượng là số dương.", null);
+            }
             list.add(item);
         }
         orderDto.setOrderItems(list);
-        return list.isEmpty() ? null : orderDto;
+        return list.isEmpty()
+                ? Pair.of("Vui lòng chọn số lượng thuốc.", null)
+                : Pair.of("Success", orderDto);
     }
 
     private String getCurrentOrderCode() {
