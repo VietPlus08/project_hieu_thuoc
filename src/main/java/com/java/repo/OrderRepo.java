@@ -21,4 +21,6 @@ public interface OrderRepo extends JpaRepository<OrderList, Integer> {
                                           @Param("startTime") LocalTime startTime,
                                           @Param("endDate") Date endDate,
                                           @Param("endTime") LocalTime endTime);
+    @Query("SELECT o FROM OrderList o WHERE o.employee.id = :empid")
+    List<OrderList> findByEmp(@Param("empid") int id);
 }

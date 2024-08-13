@@ -2,7 +2,9 @@ package com.java.service.impl;
 
 import com.java.dto.EmployeeDto;
 import com.java.model.Employee;
+import com.java.model.OrderList;
 import com.java.repo.EmployeeRepo;
+import com.java.repo.OrderRepo;
 import com.java.service.IEmployeeService;
 import com.java.utils.Const;
 import org.apache.commons.lang3.tuple.Pair;
@@ -19,9 +21,12 @@ public class EmployeeService implements IEmployeeService {
     @Autowired
     private EmployeeRepo employeeRepo;
 
+    @Autowired
+    private OrderRepo orderRepo;
+
     @Override
     public List<Employee> getList() {
-        return null;
+        return employeeRepo.findAll();
     }
 
     @Override
@@ -45,6 +50,14 @@ public class EmployeeService implements IEmployeeService {
 
     @Override
     public boolean delete(Integer id) {
+        // find odder and update null
+        List<OrderList> odders = orderRepo.findByEmp(id);
+        for (OrderList order: odders) {
+            order.setEmployee(null);
+        }
+        orderRepo.saveAll(odders);
+
+        //
         employeeRepo.deleteById(id);
         return true;
     }
