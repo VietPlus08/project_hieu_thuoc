@@ -1,5 +1,6 @@
 package com.java.controller;
 
+import com.java.Validate.CustomCustomerValidate;
 import com.java.model.Customer;
 import com.java.repo.CustomerRepo;
 import com.java.service.impl.CustomerService;
@@ -7,9 +8,11 @@ import com.sun.org.apache.xpath.internal.operations.Mod;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @Controller
@@ -19,6 +22,8 @@ public class CustomerController {
     private CustomerService customerService;
     @Autowired
     private CustomerRepo customerRepo;
+    @Autowired
+    private CustomCustomerValidate customerValidate;
     // server --> client
     @GetMapping
     public String list(Model model){
@@ -34,7 +39,10 @@ public class CustomerController {
     }
     // client --> server
     @PostMapping("/save")
-    public String save(@ModelAttribute("customer") Customer customer){
+    public String save(@ModelAttribute("customer") @Valid Customer customer, BindingResult result){
+        if (result.hasErrors()){
+            return "/customer/customer-form";
+        }
         customerService.create(customer);
         return "redirect:/customer";
 //        return "/customer/customer-form"; // loi tao nhieu customer
@@ -54,9 +62,16 @@ public class CustomerController {
     }
 
     @PostMapping("/save-edit")
-    public String Edit(@ModelAttribute("customer") Customer customer){
-        customerService.update(customer);
-        return "redirect:/customer";
+    public String Edit(@ModelAttribute("customer") @Valid Customer customer, BindingResult result){
+        customerValidate.validate(customer, result);
+        if(result.hasErrors()){
+            return "customer/customer-form-update";
+        }
+        else {
+            customerService.update(customer);
+            return "redirect:/customer";
+        }
+
     }
 
 //    @GetMapping

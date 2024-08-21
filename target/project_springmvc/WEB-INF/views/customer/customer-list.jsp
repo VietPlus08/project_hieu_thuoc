@@ -12,6 +12,7 @@
         <th>Name</th>
         <th>Age</th>
         <th>Email</th>
+        <th>PHone</th>
         <th>Action</th>
     </tr>
 
@@ -21,6 +22,7 @@
             <td>${customer.name}</td>
             <td>${customer.age}</td>
             <td>${customer.email}</td>
+            <td>${customer.phone}</td>
             <td>
                 <a href="/customer/edit/${customer.id}">Edit</a> |
                 <a href="/customer/delete/${customer.id}">Delete</a>
