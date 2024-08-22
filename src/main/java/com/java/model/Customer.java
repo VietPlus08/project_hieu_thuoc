@@ -17,13 +17,13 @@ public class Customer {
     private Integer id;
 
     private String phone;
-    @Column(columnDefinition = "NVARCHAR(255)")
+//    @Column(columnDefinition = "NVARCHAR(255)")
 //    @NotBlank(message = "Vui lòng nhập")
-    @Length(min = 5, max = 10)
+//    @Length(min = 5, max = 10)
     private String name;
-    @NotBlank(message = "Vui lòng nhập")
+//    @NotBlank(message = "Vui lòng nhập")
     private String address;
-    @Email(message = "Vui lòng nhập đúng định dạng email")
+//    @Email(message = "Vui lòng nhập đúng định dạng email")
     private String email;
 
     private int age;

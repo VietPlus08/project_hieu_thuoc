@@ -62,8 +62,8 @@ public class CustomerController {
     }
 
     @PostMapping("/save-edit")
-    public String Edit(@ModelAttribute("customer") @Valid Customer customer, BindingResult result){
-        customerValidate.validate(customer, result);
+    public String Edit(@ModelAttribute("customer") Customer customer, BindingResult result){
+//        customerValidate.validate(customer, result);
         if(result.hasErrors()){
             return "customer/customer-form-update";
         }
