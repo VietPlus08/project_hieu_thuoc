@@ -16,6 +16,7 @@
             <td>${employee.name}</td>
             <td><a href="/employee/edit/${employee.id}">edit</a></td>
             <td><a href="/employee/delete/${employee.id}">delete</a></td>
+            <td><a href="/employee/detal/${employee.id}">detail</a></td>
         </tr>
 
 
