@@ -1,17 +1,29 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: ASUS
-  Date: 08/13/2024
-  Time: 8:24 PM
-  To change this template use File | Settings | File Templates.
---%>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-    <title>Edit form</title>
-
+    <meta charset="UTF-8">
+    <title>Edit Employee</title>
+    <style>
+        .error {
+            color: red;
+        }
+    </style>
 </head>
 <body>
+    <h2>Edit Employee</h2>
+    <form:form method="post" action="/employee/save-edit/${Employee.id}" modelAttribute="employee">
+        Name: <form:input path="name"/> <form:errors path="name" cssClass="error"/><br/>
+        Address: <form:input path="address"/> <form:errors path="address" cssClass="error"/><br/>
+        Email: <form:input path="email"/> <form:errors path="email" cssClass="error"/><br/>
+        Age: <form:input path="age"/> <form:errors path="age" cssClass="error"/><br/>
+        Account: <form:input path="account"/> <form:errors path="account" cssClass="error"/><br/>
+        Password: <form:password path="password"/> <form:errors path="password" cssClass="error"/><br/>
+        Re-enter Password: <form:password path="rePassword"/> <form:errors path="rePassword" cssClass="error"/><br/>
+        Role: <form:input path="role"/> <form:errors path="role" cssClass="error"/><br/>
 
+        <input type="submit" value="Save"/>
+    </form:form>
+    <br/>
+    <a href="/employee">Back to Employee List</a>
 </body>
 </html>
